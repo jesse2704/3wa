@@ -1,0 +1,65 @@
+<?xml version="1.0"?>
+<csp_whitelist xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Csp:etc/csp_whitelist.xsd">
+    <policies>
+        <policy id="script-src">
+            <values>
+                <value id="hotjar" type="host">*.hotjar.com</value>
+                <value id="hotjar-static" type="host">static.hotjar.com</value>
+                <value id="hotjar-script" type="host">script.hotjar.com</value>
+                <value id="local" type="host">'self'</value> <!-- Allow local scripts -->
+            </values>
+        </policy>
+        <policy id="connect-src">
+            <values>
+                <value id="hotjar-api" type="host">*.hotjar.com</value>
+                <value id="hotjar-websocket" type="host">wss://*.hotjar.com</value>
+                <value id="hotjar-survey" type="host">surveystats.hotjar.io</value>
+                <value id="hotjar-ask" type="host">ask.hotjar.io</value>
+                <value id="hotjar-metrics" type="host">metrics.hotjar.io</value>
+                <value id="hotjar-content" type="host">content.hotjar.io</value>
+                <value id="local" type="host">'self'</value> <!-- Allow local connections -->
+            </values>
+        </policy>
+        <policy id="font-src">
+            <values>
+                <value id="hotjar-fonts" type="host">script.hotjar.com</value>
+                <value id="hotjar-fonts-2" type="host">surveystats.hotjar.io</value>
+                <value id="google-fonts-gstatic" type="host">fonts.gstatic.com</value> <!-- Add Google Fonts -->
+                <value id="local" type="host">'self'</value> <!-- Allow local fonts -->
+                <value id="data" type="host">data:</value>
+            </values>
+        </policy>
+        <policy id="img-src">
+            <values>
+                <value id="hotjar-images" type="host">*.hotjar.com</value>
+                <value id="google-fonts-images" type="host">fonts.gstatic.com</value> <!-- Add Google Fonts -->
+                <value id="local" type="host">'self'</value> <!-- Allow local images -->
+                <value id="adobe" type="host">assets.adobedtm.com</value>
+                <value id="omtrdc" type="host">amcglobal.sc.omtrdc.net</value>
+                <value id="demdex" type="host">dpm.demdex.net</value>
+                <value id="everesttech" type="host">cm.everesttech.net</value>
+                <value id="adobe-domains" type="host">*.adobe.com</value>
+                <value id="magento-widgets" type="host">widgets.magentocommerce.com</value>
+                <value id="data" type="host">data:</value>
+                <value id="doubleclick" type="host">googleads.g.doubleclick.net</value>
+                <value id="doubleclick-bid" type="host">bid.g.doubleclick.net</value>
+                <value id="google-analytics" type="host">analytics.google.com</value>
+                <value id="paypal" type="host">t.paypal.com</value>
+                <value id="paypal-fpdbs" type="host">fpdbs.paypal.com</value>
+                <value id="paypal-sandbox" type="host">fpdbs.sandbox.paypal.com</value>
+                <value id="vimeo" type="host">*.vimeocdn.com</value>
+                <value id="youtube-img" type="host">i.ytimg.com</value>
+                <value id="youtube" type="host">*.youtube.com</value>
+                <value id="swagger" type="host">validator.swagger.io</value>
+            </values>
+        </policy>
+        <policy id="style-src">
+            <values>
+                <value id="hotjar-styles" type="host">*.hotjar.com</value>
+                <value id="google-fonts" type="host">fonts.googleapis.com</value> <!-- Add Google Fonts -->
+                <value id="local" type="host">'self'</value> <!-- Allow local styles -->
+                <value id="unsafe-inline" type="host">'unsafe-inline'</value> <!-- Allow inline styles if necessary -->
+            </values>
+        </policy>
+    </policies>
+</csp_whitelist>

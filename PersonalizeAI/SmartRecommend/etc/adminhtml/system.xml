@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Config:etc/system_file.xsd">
+    <system>
+        <tab id="personalizeai" translate="label" sortOrder="10">
+            <label>Personalize AI</label>
+        </tab>
+        <section id="smartrecommend_settings" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+            <label>Smart Recommend</label>
+            <tab>personalizeai</tab>
+            <resource>PersonalizeAI_SmartRecommend::config</resource>
+            <group id="general" translate="label" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>General Configuration</label>
+                <field id="enable" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Enable Smart Recommend</label>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+            </group>
+            <group id="extra_personalization" translate="label" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                <label>Extra Personalization</label>
+
+                  <!-- Viewed Items -->
+                <field id="viewed_items" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Viewed Items</label>
+                    <comment>Select if you want to use viewed items for personalization.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+                
+                <!-- Bought Items -->
+                <field id="bought_items" translate="label comment" type="select" sortOrder="10" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Bought Items</label>
+                    <comment>Select if you want to use bought items for personalization.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <!-- Cart Items -->
+                <field id="cart_items" translate="label comment" type="select" sortOrder="20" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Cart Items</label>
+                    <comment>Select if you want to use cart items for personalization.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <!-- Wish List-->
+                <field id="wish_list" translate="label comment" type="select" sortOrder="30" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Wish List</label>
+                    <comment>Select if you want to use wish list items for personalization.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+                <!-- Category Browsing Extra -->
+                <field id="category_browsing" translate="label comment" type="select" sortOrder="40" showInDefault="1" showInWebsite="1" showInStore="1">
+                    <label>Category Browsing</label>
+                    <comment>Select if you want to use category browsing for personalization.</comment>
+                    <source_model>Magento\Config\Model\Config\Source\Yesno</source_model>
+                </field>
+
+            </group>
+        </section>
+    </system>
+</config>

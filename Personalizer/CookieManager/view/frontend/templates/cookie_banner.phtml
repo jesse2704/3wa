@@ -1,0 +1,24 @@
+<?php
+    if (!$block->getCookie() && $block->getModuleConfig() == 1): ?>
+    <div id="cookie-banner" class="cookie-consent-banner">
+        <div class="cookie-consent-banner__inner">
+            <div class="cookie-consent-banner__copy">
+                <div class="cookie-consent-banner__header">DEZE WEBSITE MAAKT GEBRUIK VAN COOKIES</div>
+                <div class="cookie-consent-banner__description">Deze website maakt gebruik van cookies om productbeschrijvingen, productafbeeldingen en productaanbevelingen te personaliseren met behulp van AI. Door op "Accepteren" te klikken, stemt u in met het gebruik van alle cookies.</div>
+                <p class="cookie-consent-banner__error"><br/>Vul alsjeblieft je interesses in!</p>
+                <div class="cookie-consent-banner__form"><input class="form-control interests" placeholder="Vul je interesses in, bijvoorbeeld: katten, strand, Frankrijk..."></div>
+            </div>
+
+            <div class="cookie-consent-banner__actions">
+                <button id="cookie-accept" class="cookie-consent-banner__cta">
+                    Accepteren
+                </button>
+
+                <button id="cookie-decline" class="cookie-consent-banner__cta cookie-consent-banner__cta--secondary">
+                    Afwijzen
+                </button>
+            </div>
+        </div>
+    </div>
+<?php endif; ?>
+

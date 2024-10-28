@@ -1,0 +1,74 @@
+<?php
+/**
+ * Product description template
+ *
+ * @var $block \Magento\Catalog\Block\Product\View\Description
+ */
+?>
+<script type="text/javascript">
+    function getCookie(cname) {
+        let name = cname + "=";
+        let decodedCookie = decodeURIComponent(document.cookie);
+        let ca = decodedCookie.split(';');
+        for(let i = 0; i <ca.length; i++) {
+            let c = ca[i];
+            while (c.charAt(0) == ' ') {
+                c = c.substring(1);
+            }
+            if (c.indexOf(name) == 0) {
+                return c.substring(name.length, c.length);
+            }
+        }
+        return "";
+    }
+
+    function generateContent(userinput){
+        generated_pre = document.getElementById("generated_text");
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', 'https://ai-server.regem.in/api/index.php');
+        xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+
+        xhr.onreadystatechange = function() {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                aioutput = xhr.responseText
+                if(aioutput.includes("Try Again! or May be Server is Down!")){
+                    aioutput = "Try Again, Sorry about it."
+                }
+                else if( aioutput.includes("regem") ){
+
+                    aioutput = aioutput.replaceAll("regem", "openai")
+                }
+                else if( aioutput.includes("Regem") ){
+
+                    aioutput = aioutput.replaceAll("Regem", "Openai")
+                }
+                generated_pre.innerText = aioutput
+
+                setTimeout(()=>{
+                    generated_pre.style.color = "black"
+                }, 400)
+
+            }
+        };
+        query = 'input=' + encodeURIComponent('Herschrijf de volgende tekst (voor iemand met de volgende interesses: '+ getCookie('personalize_accepted') +'): ' + userinput + ' (let op het volgende: <?= $block->getApiInstruction() ?> )');
+        query = decodeURIComponent(query);
+        query = query.replace(/(\r\n|\n|\r)/gm, "");
+
+        xhr.send(query);
+    }
+    generateContent()
+
+</script>
+<div data-content-type="row" data-appearance="contained" data-element="main">
+    <?php
+        if($block->getPersonalizeCookie() && $block->getApiPlace() == 'frontend'): ?>
+            <span id="generated_text">(Let op: we zijn bezig met de tekst te personalizeren....) <br/><br/> <?= $block->getProduct()->getDescription() ?></span>
+            <?php $description = strip_tags($block->getProduct()->getDescription());?>
+            <script> generateContent(`<?= $description ?>`) </script>
+        <?php
+        else:
+            echo $block->getProduct()->getDescription();
+        endif;
+    ?>
+</div>
+

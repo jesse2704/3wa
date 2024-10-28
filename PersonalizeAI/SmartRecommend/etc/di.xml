@@ -1,0 +1,60 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:ObjectManager/etc/config.xsd">
+    <type name="Magento\Framework\App\Action\AbstractAction">
+        <plugin name="personalizeai_smartrecommend_customer_id_context" type="PersonalizeAI\SmartRecommend\Plugin\CustomerIdContext" sortOrder="10" />
+    </type>
+    
+    <type name="PersonalizeAI\SmartRecommend\Block\Recommend">
+        <arguments>
+            <argument name="context" xsi:type="object">Magento\Framework\View\Element\Template\Context</argument>
+            <argument name="questionConfig" xsi:type="object">PersonalizeAI\SmartRecommend\Model\QuestionConfig</argument>
+            <argument name="httpContext" xsi:type="object">Magento\Framework\App\Http\Context</argument>
+            <argument name="extraPersonalizationHelper" xsi:type="object">PersonalizeAI\SmartRecommend\Helper\ExtraPersonalization</argument>
+        </arguments>
+    </type>
+
+    <type name="PersonalizeAI\SmartRecommend\Block\Dashboard">
+        <arguments>
+            <argument name="context" xsi:type="object">Magento\Framework\View\Element\Template\Context</argument>
+            <argument name="indexController" xsi:type="object">PersonalizeAI\SmartRecommend\Controller\Index\Dashboard</argument>
+            <argument name="orderCollectionFactory" xsi:type="object">Magento\Sales\Model\ResourceModel\Order\CollectionFactory</argument>
+            <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session</argument>
+            <argument name="productRepository" xsi:type="object">Magento\Catalog\Model\ProductRepository</argument>
+            <argument name="viewedProductsBlock" xsi:type="object">Magento\Reports\Block\Product\Viewed</argument>
+            <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session</argument>
+            <argument name="wishlistFactory" xsi:type="object">Magento\Wishlist\Model\WishlistFactory</argument>
+            <argument name="extraPersonalizationHelper" xsi:type="object">PersonalizeAI\SmartRecommend\Helper\ExtraPersonalization</argument>
+            <argument name="personalizeRecommondationAI" xsi:type="object">Personalizer\Recommendation\Block\Product\RecommondationService</argument>
+            <argument name="explicitDataService" xsi:type="object">PersonalizeAI\SmartRecommend\Model\ExplicitDataService</argument>
+        </arguments>
+    </type>
+
+    <type name="PersonalizeAI\SmartRecommend\Model\ExplicitDataService">
+    <arguments>
+        <argument name="customerSession" xsi:type="object">Magento\Customer\Model\Session</argument>
+        <argument name="viewedProductsBlock" xsi:type="object">Magento\Reports\Block\Product\Viewed</argument>
+        <argument name="orderCollectionFactory" xsi:type="object">Magento\Sales\Model\ResourceModel\Order\CollectionFactory</argument>
+        <argument name="productRepository" xsi:type="object">Magento\Catalog\Model\ProductRepository</argument>
+        <argument name="checkoutSession" xsi:type="object">Magento\Checkout\Model\Session</argument>
+        <argument name="wishlistFactory" xsi:type="object">Magento\Wishlist\Model\WishlistFactory</argument>
+        <argument name="extraPersonalizationHelper" xsi:type="object">PersonalizeAI\SmartRecommend\Helper\ExtraPersonalization</argument>
+    </arguments>
+</type>
+
+    <type name="PersonalizeAI\SmartRecommend\Block\RecommendedProducts">
+        <arguments>
+            <argument name="context" xsi:type="object">Magento\Catalog\Block\Product\Context</argument>
+            <argument name="postDataHelper" xsi:type="object">Magento\Framework\Data\Helper\PostHelper</argument>
+            <argument name="layerResolver" xsi:type="object">Magento\Catalog\Model\Layer\Resolver</argument>
+            <argument name="categoryRepository" xsi:type="object">Magento\Catalog\Api\CategoryRepositoryInterface</argument>
+            <argument name="searchCriteriaBuilder" xsi:type="object">Magento\Framework\Api\SearchCriteriaBuilder</argument>
+            <argument name="visibility" xsi:type="object">Magento\Catalog\Model\Product\Visibility</argument>
+            <argument name="storeManager" xsi:type="object">Magento\Store\Model\StoreManagerInterface</argument>
+            <argument name="urlHelper" xsi:type="object">Magento\Framework\Url\Helper\Data</argument>
+            <argument name="personalizeRecommondationAI" xsi:type="object">Personalizer\Recommendation\Block\Product\RecommondationService</argument>
+            <argument name="productCollectionFactory" xsi:type="object">Magento\Catalog\Model\ResourceModel\Product\CollectionFactory</argument>
+            <argument name="scopeConfig" xsi:type="object">Magento\Framework\App\Config\ScopeConfigInterface</argument>
+             <argument name="cookieManager" xsi:type="object">Magento\Framework\Stdlib\CookieManagerInterface</argument>
+        </arguments>
+    </type>
+</config>

@@ -1,0 +1,11 @@
+<?xml version="1.0"?>
+<config xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:module:Magento_Store:etc/config.xsd">
+    <default>
+        <productimage>
+            <general>
+                <enable>1</enable>
+                <apikey>DEZGO-823138F000960E32598529D7F3798F7C85872831B327075D2876B968315E605C12629F72</apikey>
+            </general>
+        </productimage>
+    </default>
+</config>

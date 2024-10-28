@@ -1,0 +1,517 @@
+<!DOCTYPE html>
+<html lang="nl">
+   <head>
+      <meta charset="UTF-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1.0">
+      <title>Webshop Personalisatie</title>
+      <style>
+         .settings-icon {
+         position: fixed;
+         bottom: 35px;
+         right: 20px;
+         font-size: 30px;
+         cursor: pointer;
+         z-index: 1001;
+         }
+         .settings-popup {
+         position: fixed;
+         bottom: 70px;
+         right: 20px;
+         background-color: white;
+         padding: 20px;
+         border-radius: 10px;
+         box-shadow: 0 0 10px rgba(0,0,0,0.1);
+         z-index: 1002;
+         display: none;
+         }
+         .popup {
+         position: fixed;
+         top: 50%;
+         left: 50%;
+         transform: translate(-50%, -50%);
+         background-color: white;
+         padding: 20px;
+         border-radius: 10px;
+         box-shadow: 0 0 10px rgba(0,0,0,0.1);
+         text-align: center;
+         width: 80%;
+         max-width: 600px;
+         z-index: 1000;
+         }
+         .options {
+         display: flex;
+         justify-content: space-around;
+         margin-top: 20px;
+         }
+         .option {
+         cursor: pointer;
+         padding: 10px;
+         border: 1px solid #ddd;
+         border-radius: 5px;
+         transition: background-color 0.3s;
+         flex: 1;
+         margin: 0 10px;
+         }
+         .option:hover {
+         background-color: #f0f0f0;
+         }
+         .option img {
+         width: 100px;
+         height: 100px;
+         object-fit: cover;
+         }
+         .question {
+         margin-bottom: 20px;
+         }
+         .hidden {
+         display: none;
+         }
+         .clear-button {
+         margin-top: 20px;
+         padding: 10px 20px;
+         background-color: #ff4d4d;
+         color: white;
+         border: none;
+         border-radius: 5px;
+         cursor: pointer;
+         }
+         .clear-button:hover {
+         background-color: #ff1a1a;
+         }
+         .selected {
+         background-color: lightblue;
+         }
+         .arrows {
+         display: flex;
+         justify-content: space-evenly;
+         align-items: center;     
+         margin: 20px 0;         
+         }           
+         .arrow {
+         width: 50px;            
+         height: auto;          
+         cursor: pointer;        
+         transition: transform 0.3s ease;
+         margin: 0 15px;  
+         }
+         .arrow:hover {
+         transform: scale(1.1); 
+         } 
+         .toggle-container {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 60px;
+  height: 34px;
+  margin-right: 10px;
+}
+
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 26px;
+  width: 26px;
+  left: 4px;
+  bottom: 4px;
+  background-color: white;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color: #2196F3;
+}
+
+input:checked + .slider:before {
+  transform: translateX(26px);
+}
+
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}
+      </style>
+   </head>
+   <body>
+        <!-- Module settings gear -->
+        <div id="settingsIcon" class="settings-icon">⚙️</div>
+        <!-- Module settings options -->
+        <div id="settingsPopup" class="settings-popup">
+        <h3>Personalization settings</h3>
+        <div class="toggle-container">
+            <label class="switch">
+            <input type="checkbox" id="personalizationToggle">
+            <span class="slider round"></span>
+            </label>
+            <span>Enable Personalization</span>
+        </div>
+        <button onclick="clearPreferences()">Clear Answers</button>
+        <button id="editQuestionsButton" onclick="editQuestions()">Edit Questions</button>
+        <button id="revokepermissions" onclick="revokepermissions()">Revoke permissions</button>
+        <button id="aboutButton" onclick="showAbout()">About</button>
+        </div>
+      <!-- Module Swipe functionality questions -->
+      <div class="popup" id="preferencePopup">
+         <?php
+         $questions = $block->getQuestions();
+         $questionKeys = $block->getQuestionKeys();
+            ?>
+
+         <?php foreach ($questionKeys as $index => $questionKey): ?>
+                <?php $question = $questions[$questionKey]; ?>
+         <div id="<?= $questionKey; ?>" class="question <?= $index > 0 ? "hidden" : ""; ?>">
+            <h2><?= $question["title"]; ?></h2>
+            <div class="options">
+                <?php foreach ($question["options"] as $option): ?>
+               <div class="option" data-question="<?= $questionKey; ?>" data-choice="<?= $option["choice"]; ?>">
+                  <p><?= $option["text"]; ?></p>
+               </div>
+               <?php endforeach; ?>
+            </div>
+            <div class="arrows">
+               <img class="arrow left-arrow" src="<?= $block->getViewFileUrl("PersonalizeAI_SmartRecommend/images/arrow-left.png"); ?>" alt="Left Arrow">
+               <img class="arrow right-arrow" src="<?= $block->getViewFileUrl("PersonalizeAI_SmartRecommend/images/arrow-right.png"); ?>" alt="Right Arrow">
+            </div>
+         </div>
+         <?php endforeach; ?>
+         <button class="clear-button" onclick="document.getElementById('preferencePopup').style.display = 'none';">Ik wil geen personalisatie!</button>
+      </div>
+      <script>
+         // Get Question data from QuestionConfig Via Recommend.php
+         var questionData = <?= json_encode($block->getQuestionData()) ?>;
+         
+         // Log the entire question data object
+         console.log('Question Data:', questionData);
+         
+         
+         Object.keys(questionData).forEach(key => {
+             console.log(`Question ${key}:`, questionData[key].title);
+             console.log(`Options for ${key}:`, questionData[key].options);
+         });
+         document.getElementById('settingsIcon').addEventListener('click', toggleSettingsPopup);
+         
+         function revokepermissions() {
+         clearPreferences();
+         document.getElementById('preferencePopup').style.display = 'none';
+         }
+         
+         function toggleSettingsPopup() {
+         const popup = document.getElementById('settingsPopup');
+         popup.style.display = popup.style.display === 'none' ? 'block' : 'none';
+         }
+         
+         //Retrieve keys from QuestionConfig.php
+         const QUESTION_KEYS = <?= json_encode($questionKeys); ?>;
+         
+         let currentQuestionIndex = 0;
+         
+         function showPersonalizedContent() {
+         const preferences = getStoredPreferences();
+         let interests = "";
+         let message = 'Op basis van jouw voorkeuren: \n';
+         for (const [key, value] of Object.entries(preferences)) {
+             message += `${key}: ${value}\n`;
+            interests += value + ", ";
+         }
+         document.cookie = "personalize_accepted=" + interests + "; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/";
+         console.log(message);
+         }
+
+         function getPersonalizeAcceptedCookie() {
+         const cookies = document.cookie.split(';');
+         for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith('personalize_accepted=')) {
+                const cookieValue = cookie.substring('personalize_accepted='.length);
+                return cookieValue.split(',').map(value => value.trim()).filter(Boolean);
+                }
+            }
+            return [];
+        }
+         
+        function getStoredPreferences() {
+            const cookieValues = getPersonalizeAcceptedCookie();
+            const preferences = {};
+
+            // Check if a options matches a question to determine question
+            for (const key of QUESTION_KEYS) {
+                const matchingOption = questionData[key].options.find(option => 
+                cookieValues.includes(option.choice)
+                );
+                preferences[key] = matchingOption ? matchingOption.choice : null;
+            }
+
+            return preferences;
+        }
+         
+        function clearPreferences() {
+            // Clear the personalize_accepted cookie
+            document.cookie = 'personalize_accepted=; expires=Thu, 01 Jan 2000 00:00:00 GMT; path=/';
+            
+            console.log('All preferences cleared.');
+            
+            resetQuestions();
+        }
+         
+         function resetQuestions() {
+         currentQuestionIndex = 0;
+         document.getElementById('preferencePopup').style.display = 'block';
+         document.querySelectorAll('.question').forEach(q => q.classList.add('hidden'));
+         document.getElementById(QUESTION_KEYS[currentQuestionIndex]).classList.remove('hidden');
+         highlightChosenAnswers();
+         addArrowKeyListener();
+         }
+         
+         function chooseOption(questionKey, choice) {
+            // Get current cookie values
+            let choices = getPersonalizeAcceptedCookie();
+
+            // Update the choice for the current question
+            const index = QUESTION_KEYS.indexOf(questionKey);
+            if (index !== -1) {
+                choices[index] = choice;
+            } else {
+                console.error(`Invalid question key: ${questionKey}`);
+                return;
+            }
+
+            // Remove any null or undefined values
+            choices = choices.filter(Boolean);
+
+            // Set the updated cookie
+            document.cookie = `personalize_accepted=${choices.join(',')}; expires=Fri, 31 Dec 9999 23:59:59 GMT; path=/`;
+
+            console.log(`User chose ${questionKey}: ${choice}`);
+
+            // Update UI to reflect the choice
+            highlightChosenAnswers();
+
+            // Navigate to the next question
+            navigateToNextQuestion();
+            }
+         
+         function navigateToNextQuestion() {
+         const currentQuestionElement = document.getElementById(QUESTION_KEYS[currentQuestionIndex]);
+         if (currentQuestionElement) {
+             currentQuestionElement.classList.add('hidden');
+             currentQuestionIndex++;
+             const nextQuestionElement = document.getElementById(QUESTION_KEYS[currentQuestionIndex]);
+             if (nextQuestionElement) {
+                 nextQuestionElement.classList.remove('hidden');
+             } else {
+                 document.getElementById('preferencePopup').style.display = 'none';
+                 removeArrowKeyListener();
+                 showPersonalizedContent();
+             }
+         }
+         }
+         
+         function handleOptionClick(event) {
+         const optionElement = event.currentTarget;
+         const questionKey = optionElement.dataset.question;
+         const choice = optionElement.dataset.choice;
+         selectOptionByElement(optionElement, questionKey, choice);
+         }
+         
+         function setupOptionListeners() {
+         document.querySelectorAll('.option').forEach(option => {
+             option.addEventListener('click', handleOptionClick);
+         });
+         }
+
+         function findKeyForResponse(response) {
+            for (const [key, data] of Object.entries(questionData)) {
+                const matchingOption = data.options.find(option => option.choice === response);
+                if (matchingOption) {
+                return key;
+                }
+            }
+            return null;
+            }
+            
+            function highlightChosenAnswers() {
+            // Remove 'selected' class from all options
+            document.querySelectorAll('.option').forEach(option => option.classList.remove('selected'));
+
+            // Get the array of choices from the cookie
+            const choices = getPersonalizeAcceptedCookie();
+            
+            // Look for matching respons with question using findKeyResponse()
+            choices.forEach(choice => {
+                const questionKey = findKeyForResponse(choice);
+                if (questionKey) {
+                const selectedOption = document.querySelector(`#${questionKey} .option[data-choice="${choice}"]`);
+                if (selectedOption) {
+                    selectedOption.classList.add('selected');
+                    console.log(`Highlighted option for ${questionKey}: ${choice}`);
+                } else {
+                    console.log(`Option element not found for ${questionKey}: ${choice}`);
+                }
+                } else {
+                console.log(`No matching question key found for choice: ${choice}`);
+                }
+            });
+            }
+         
+         function editQuestions() {
+         resetQuestions();
+         }
+         
+         function addArrowKeyListener() {
+         document.addEventListener('keydown', handleArrowKey);
+         }
+         
+         function removeArrowKeyListener() {
+         document.removeEventListener('keydown', handleArrowKey);
+         }
+         
+         function handleArrowKey(event) {
+         if (event.key === 'ArrowRight' || event.key === 'ArrowLeft') {
+             event.preventDefault();
+             console.log('pressed', event.key);
+             selectOption(event.key === 'ArrowRight' ? 1 : -1);
+         }
+         }
+         
+         function selectOption(direction) {
+         const currentQuestionElement = document.getElementById(QUESTION_KEYS[currentQuestionIndex]);
+         if (!currentQuestionElement) return;
+         
+         const options = currentQuestionElement.querySelectorAll('.option');
+         let selectedIndex = Array.from(options).findIndex(option => option.classList.contains('selected'));
+         
+         console.log("Options:", options);
+         console.log("Selected Index:", selectedIndex);
+         
+         // Initialize selection if none is selected
+         if (selectedIndex === -1 && options.length > 0) {
+             selectedIndex = 0; // Default to the first option if none is selected
+             options[selectedIndex].classList.add('selected');
+         }
+         
+         let newIndex = selectedIndex + direction;
+         
+         // Ensure newIndex is within bounds
+         if (newIndex < 0) {
+             newIndex = 0; // Prevent moving before the first option
+         } else if (newIndex >= options.length) {
+             newIndex = options.length - 1; // Prevent moving past the last option
+         }
+         
+         const selectedOption = options[newIndex];
+         
+         // If the option is already selected, move to the next question
+         if (selectedOption.classList.contains('selected')) {
+             console.log("Option already selected, navigating to next question");
+             navigateToNextQuestion();
+             return;
+         }
+         
+         // Update selection
+         options.forEach(opt => opt.classList.remove('selected')); // Clear previous selection
+         selectedOption.classList.add('selected');
+         const questionKey = QUESTION_KEYS[currentQuestionIndex];
+         const choice = selectedOption.dataset.choice;
+         chooseOption(questionKey, choice);
+         }
+         
+         function selectOptionByElement(optionElement, questionKey, choice) {
+         const questionElement = optionElement.closest('.question');
+         questionElement.querySelectorAll('.option').forEach(opt => opt.classList.remove('selected'));
+         optionElement.classList.add('selected');
+         chooseOption(questionKey, choice);
+         }
+
+         // Function to get a cookie value
+        function getCookie(name) {
+            const value = `; ${document.cookie}`;
+            const parts = value.split(`; ${name}=`);
+            if (parts.length === 2) return parts.pop().split(';').shift();
+        }
+
+        function getTogglerCookie() {
+         const cookies = document.cookie.split(';');
+         for (let cookie of cookies) {
+                cookie = cookie.trim();
+                if (cookie.startsWith('personalizationToggler=')) {
+                const cookieValue = cookie.substring('personalizationToggler='.length);
+                return cookieValue.split(',').map(value => value.trim()).filter(Boolean);
+                }
+            }
+            return [];
+        }
+
+        // Function to set a cookie
+        function setCookie(name, value, days) {
+            const date = new Date();
+            date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+            const expires = `expires=${date.toUTCString()}`;
+            document.cookie = `${name}=${value};${expires};path=/`;
+        }
+
+        // Function to initialize the toggle based on cookie value
+        function initializeToggle() {
+            const toggle = document.getElementById('personalizationToggle');
+            const cookieValue = getCookie('personalizationToggler');
+            
+            if (cookieValue === null || cookieValue === undefined) {
+                // If cookie doesn't exist, set default to true
+                toggle.checked = true;
+                setCookie('personalizationToggler', 'true', 365); // Set cookie for 1 year
+            } else {
+                // Set toggle based on cookie value
+                toggle.checked = cookieValue === 'true';
+            }
+        }
+
+        // Function to handle toggle changes
+        function handleToggleChange() {
+            const toggle = document.getElementById('personalizationToggle');
+            setCookie('personalizationToggler', toggle.checked, 365); // Update cookie
+            console.log('Personalization ' + (toggle.checked ? 'enabled' : 'disabled'));
+        }
+
+        // Add event listener to the toggle
+        document.getElementById('personalizationToggle').addEventListener('change', handleToggleChange);
+
+        // Initialize the toggle when the page loads
+        document.addEventListener('DOMContentLoaded', initializeToggle);
+         
+         window.onload = function() {
+         const preferences = getStoredPreferences();
+         if (Object.values(preferences).every(value => value)) {
+             document.getElementById('preferencePopup').style.display = 'none';
+             showPersonalizedContent();
+         } else {
+             document.getElementById(QUESTION_KEYS[0]).classList.remove('hidden');
+         }
+         setupOptionListeners();
+         addArrowKeyListener();
+         }
+      </script>
+   </body>
+</html>

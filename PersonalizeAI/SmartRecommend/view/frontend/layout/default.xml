@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+<page xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="urn:magento:framework:View/Layout/etc/page_configuration.xsd">
+    <body>
+        <referenceContainer name="content">
+            <block class="Magento\Framework\View\Element\Template" name="popup.modal" template="PersonalizeAI_SmartRecommend::modal.phtml" />
+        </referenceContainer>
+        <referenceContainer name="before.body.end">
+            <block class="PersonalizeAI\SmartRecommend\Block\HotjarScript" name="hotjar_script" template="PersonalizeAI_SmartRecommend::hotjar_script.phtml"/>
+        </referenceContainer>
+        <referenceBlock name="footer_links">
+            <block class="Magento\Framework\View\Element\Html\Link\Current" name="privacypolicy-link">
+                <arguments>
+                    <argument name="label" xsi:type="string">privacy policy</argument>
+                    <argument name="path" xsi:type="string">privacypolicy</argument>
+                </arguments>
+            </block>
+        </referenceBlock>
+    </body>
+</page>

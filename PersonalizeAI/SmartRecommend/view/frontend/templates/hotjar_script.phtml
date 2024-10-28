@@ -1,0 +1,28 @@
+<?php
+/** @var \PersonalizeAI\SmartRecommend\Block\DataLayer $block */
+$customerId = $block->getCustomerId();
+$customerGender = $block->getCustomerGender();
+$isLoggedIn = $block->isLoggedIn();
+?>
+
+<script>
+// // Hotjar Tracking Code TRIAL EXPIRED
+// (function(h,o,t,j,a,r){
+//     h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+//     h._hjSettings={hjid:5083882,hjsv:6};
+//     a=o.getElementsByTagName('head')[0];
+//     r=o.createElement('script');r.async=1;
+//     r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+//     a.appendChild(r);
+// })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+
+//Hotjar Tracking Code for https://stageopdracht.local -->
+    (function(h,o,t,j,a,r){
+        h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
+        h._hjSettings={hjid:5126249,hjsv:6};
+        a=o.getElementsByTagName('head')[0];
+        r=o.createElement('script');r.async=1;
+        r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+        a.appendChild(r);
+    })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+</script>

@@ -1,0 +1,190 @@
+<?php
+    /** @var \PersonalizeAI\SmartRecommend\Block\Dashboard $block */
+?>
+<!-- <div class="dashboardData">
+    <img class="dashboardLoader" src="https://media.giphy.com/media/3oEjI6SIIHBdRxXI40/giphy.gif" alt="Loading...">
+</div> -->
+<div class="dashboard-container">
+    <style>
+        .dashboard-container {
+            font-family: Arial, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .dashboard-section {
+            margin-bottom: 30px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            padding: 20px;
+        }
+        .dashboard-section h2 {
+            color: #333;
+            border-bottom: 2px solid #ddd;
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+        .product-item {
+            background-color: #fff;
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 3px;
+        }
+        .product-item p {
+            margin: 5px 0;
+        }
+        .no-products {
+            color: #666;
+            font-style: italic;
+        }
+    </style>
+
+<?php
+$boughtProducts = $block->getExplicitDataService()->getBoughtProducts();
+$viewedProducts = $block->getExplicitDataService()->getViewedProducts();
+$cartItems = $block->getExplicitDataService()->getCartItems();
+$wishlistItems = $block->getExplicitDataService()->getWishlistItems();
+$personalizedPrompt = $block->getExplicitDataService()->getPrompt();
+$allProducts = $block->getExplicitDataService()->getAllProducts();
+?>
+
+<div class="dashboard-section">
+    <h2>Bought Products</h2>
+    <?php
+    if (!empty($boughtProducts)) {
+        foreach ($boughtProducts as $product) {
+            echo '<div class="product-item">';
+            echo '<p><strong>Product:</strong> ' . $escaper->escapeHtml($product['name']) . ' (SKU: ' . $escaper->escapeHtml($product['sku']) . ')</p>';
+            echo '<p><strong>Quantity:</strong> ' . $escaper->escapeHtml($product['qty']) . ', <strong>Price:</strong> ' . $escaper->escapeHtml($product['price']) . '</p>';
+            echo '<p><strong>Order ID:</strong> ' . $escaper->escapeHtml($product['order_id']) . ', <strong>Date:</strong> ' . $escaper->escapeHtml($product['order_date']) . '</p>';
+            echo '<p><strong>Order Status:</strong> ' . $escaper->escapeHtml($product['order_status']) . '</p>';
+            echo '</div>';
+        }
+    } else {
+        echo '<p class="no-products">No bought products found.</p>';
+    }
+    ?>
+</div>
+
+<div class="dashboard-section">
+    <h2>Viewed Products</h2>
+    <?php
+    if ($viewedProducts && $viewedProducts->getSize() > 0) {
+        foreach ($viewedProducts as $product) {
+            echo '<div class="product-item">';
+            echo '<p><strong>Product:</strong> ' . $escaper->escapeHtml($product->getName()) . ' (SKU: ' . $escaper->escapeHtml($product->getSku()) . ')</p>';
+            echo '<p><strong>Price:</strong> ' . $escaper->escapeHtml($product->getPrice()) . '</p>';
+            echo '<p><strong>Product ID:</strong> ' . $escaper->escapeHtml($product->getId()) . '</p>';
+            echo '<p><strong>Last Viewed:</strong> ' . $escaper->escapeHtml($product->getAddedAt()) . '</p>';
+            echo '</div>';
+        }
+    } else {
+        echo '<p class="no-products">No viewed products found.</p>';
+    }
+    ?>
+</div>
+
+<div class="dashboard-section">
+    <h2>Shopping Cart Items</h2>
+    <?php
+    if (!empty($cartItems)) {
+        foreach ($cartItems as $item) {
+            echo '<div class="product-item">';
+            echo '<p><strong>ID:</strong> ' . $escaper->escapeHtml($item['id']) . '</p>';
+            echo '<p><strong>Name:</strong> ' . $escaper->escapeHtml($item['name']) . '</p>';
+            echo '<p><strong>SKU:</strong> ' . $escaper->escapeHtml($item['sku']) . '</p>';
+            echo '<p><strong>Quantity:</strong> ' . $escaper->escapeHtml($item['qty']) . '</p>';
+            echo '<p><strong>Price:</strong> $' . $escaper->escapeHtml(number_format($item['price'], 2)) . '</p>';
+            echo '</div>';
+        }
+    } else {
+        echo '<p class="no-items">No shopping cart items found.</p>';
+    }
+    ?>
+</div>
+
+<div class="dashboard-section">
+    <h2>Wishlist Items</h2>
+    <?php
+    if (!empty($wishlistItems)) {
+        foreach ($wishlistItems as $item) {
+            echo '<div class="product-item">';
+            echo '<p><strong>ID:</strong> ' . $escaper->escapeHtml($item['id']) . '</p>';
+            echo '<p><strong>Name:</strong> ' . $escaper->escapeHtml($item['name']) . '</p>';
+            echo '<p><strong>SKU:</strong> ' . $escaper->escapeHtml($item['sku']) . '</p>';
+            echo '<p><strong>Price:</strong> $' . $escaper->escapeHtml(number_format($item['price'], 2)) . '</p>';
+           // echo '<p><strong>Added At:</strong> ' . $block->escapeHtml($item['added_at']) . '</p>';
+            echo '</div>';
+        }
+    } else {
+        echo '<p class="no-items">No wishlist items found.</p>';
+    }
+    ?>
+</div>
+
+    <div class="dashboard-section">
+    <h2>Extra Personalization</h2>
+    <?php
+    if (!empty($personalizedPrompt)) {
+        echo '<div class="extra-personalization-prompt">';
+        echo '<h3>AI Personalization Prompt:</h3>';
+        echo '<pre>' . $escaper->escapeHtml($personalizedPrompt) . '</pre>';
+        echo '</div>';
+    } else {
+        echo '<p class="no-items">No extra personalization options enabled.</p>';
+    }
+    ?>
+
+</div>
+    <!-- Get all products in magento store -->
+    <?php
+    $personalizeRecommondationAI = $block->getPersonalizeRecommondationAI();
+    if ($personalizeRecommondationAI) {
+        $products = $allProducts;
+        if (!empty($products)): ?>
+            <ul>
+            <?php foreach ($products as $product): ?>
+                <li>
+                    Name: <?= $escaper->escapeHtml($product['name']) ?><br>
+                    Price: <?= $escaper->escapeHtml($product['price']) ?><br>
+                    Color: <?= $escaper->escapeHtml($product['color']) ?>
+                </li>
+            <?php endforeach; ?>
+            </ul>
+        <?php else: ?>
+            <p>No products found.</p>
+        <?php endif;
+    } else {
+        echo "PersonalizeRecommondationAI is not available.";
+    }
+    ?>
+
+    <!-- Give recommendations -->
+    <?php
+    $personalizeRecommondationAI = $block->getPersonalizeRecommondationAI();
+    if ($personalizeRecommondationAI) {
+        $recommendations = $personalizeRecommondationAI->generateRecommendation();
+        if (!empty($recommendations)): ?>
+        <h2>Personalized Recommendations</h2>
+        <ul>
+            <?php foreach ($recommendations as $product): ?>
+            <li>
+                ID: <?= $escaper->escapeHtml($product['id']) ?><br>
+                Name: <?= $escaper->escapeHtml($product['name']) ?><br>
+                Price: <?= $escaper->escapeHtml($product['price']) ?><br>
+                <?php if (isset($product['color']) && $product['color']): ?>
+                    Color: <?= $escaper->escapeHtml($product['color']) ?><br>
+                <?php endif; ?>
+            </li>
+        <?php endforeach; ?>
+        </ul>
+        <?php else: ?>
+        <p>No personalized recommendations available at this time.</p>
+    <?php endif;
+    } else {
+        echo "PersonalizeRecommondationAI is not available.";
+    }
+    ?>
+    
+</div>
